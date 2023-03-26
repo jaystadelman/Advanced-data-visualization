@@ -7,3 +7,4 @@
 ## ggplot Graph:
 
 <img src="https://jaystadelman.github.io/Advanced-data-visualization/Freq%20of%20hair%20color%20by%20sex.png" alt="Freq of hair color by sex" width="800" height="600">
+
