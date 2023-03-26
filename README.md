@@ -1,2 +1,9 @@
-# Advanced-data-visualization
-Repository for the first post in my R with Prompt engineering mini series. 
+# Advanced-data-visualization Webpage
+## Plotly Graph:
+
+<iframe style="border:0" src="https://jaystadelman.github.io/Advanced%20data%20visualization/Freq%20of%20hair%20color%20by%20sex.html" width="750" height="500"></iframe>
+
+## ggplot Graph:
+
+<img src="https://jaystadelman.github.io/Advanced%20data%20visualization/Freq%20of%20hair%20color%20by%20sex.png" alt="Freq of hair color by sex" width="800" height="600">
+
