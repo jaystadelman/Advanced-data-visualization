@@ -1,0 +1,57 @@
+---
+title: 'Learning R with Prompt Engineering: post 1'
+author: "JS"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+#Looks at all the datasets available
+data()
+#Taking a look at the data -- please note to extract the data you need to use the "datasets" not "data"
+View(datasets::HairEyeColor)
+#Pulling the data into my environment and renaming it for ease of use. 
+HEC <- as.data.frame(datasets::HairEyeColor)
+```
+
+
+```{r}
+library(plotly)
+#The hexadecimal color codes for our hair colors 
+hair_colors <- c("Black" = "#000000", "Brown" = "#8B4513", "Red" = "#FF0000", "Blond" = "#F5DEB3")
+
+# Create an interactive bar chart using plotly Looking at Hair color by Sex
+plot_ly(HEC %>% group_by(Sex), x = ~Sex, y = ~Freq, color = ~Hair,  colors = hair_colors , type = "bar") %>%
+  layout(title = "Frequency of Hair Color by Sex",
+         xaxis = list(title = "Sex"),
+         yaxis = list(title = "Count"))
+
+```
+```{r}
+
+library(ggplot2)
+
+#The hexadecimal color codes for our hair colors 
+hair_colors <- c("Black" = "#000000", "Brown" = "#8B4513", "Red" = "#FF0000", "Blond" = "#F5DEB3")
+
+# Create a bar chart using ggplot2 Looking at Hair color by Sex
+ggplot(HEC, aes(x = Sex, y = Freq, fill = Hair)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = hair_colors) +
+  ggtitle("Frequency of Hair Color by Sex") +
+  xlab("Sex") + ylab("Count")
+
+```
+```{r}
+library(here)
+# Save the plotly graph as an HTML file
+htmlwidgets::saveWidget(plot_ly(HEC %>% group_by(Sex), x = ~Sex, y = ~Freq, color = ~Hair, colors = hair_colors, type = "bar") %>%
+                          layout(title = "Frequency of Hair Color by Sex",
+                                 xaxis = list(title = "Sex"),
+                                 yaxis = list(title = "Count")),
+                        file = here("Advanced data visualization", "Freq of hair color by sex.html"))
+
+
+```
+
+
