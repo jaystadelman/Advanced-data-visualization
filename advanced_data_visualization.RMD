@@ -6,6 +6,16 @@ output: html_document
 ---
 
 ```{r}
+library(tidyverse)
+library(ggplot2)
+library(gganimate)
+library(hrbrthemes)
+library(viridis)
+#This library below is necessary for gganimate!
+library(gifski)
+```
+
+```{r}
 #Looks at all the datasets available
 data()
 #Taking a look at the data -- please note to extract the data you need to use the "datasets" not "data"
@@ -14,7 +24,7 @@ View(datasets::HairEyeColor)
 HEC <- as.data.frame(datasets::HairEyeColor)
 ```
 
-
+## Plotly vs ggPlot2
 ```{r}
 library(plotly)
 #The hexadecimal color codes for our hair colors 
@@ -27,10 +37,8 @@ plot_ly(HEC %>% group_by(Sex), x = ~Sex, y = ~Freq, color = ~Hair,  colors = hai
          yaxis = list(title = "Count"))
 
 ```
+
 ```{r}
-
-library(ggplot2)
-
 #The hexadecimal color codes for our hair colors 
 hair_colors <- c("Black" = "#000000", "Brown" = "#8B4513", "Red" = "#FF0000", "Blond" = "#F5DEB3")
 
@@ -50,8 +58,45 @@ htmlwidgets::saveWidget(plot_ly(HEC %>% group_by(Sex), x = ~Sex, y = ~Freq, colo
                                  xaxis = list(title = "Sex"),
                                  yaxis = list(title = "Count")),
                         file = here("Advanced data visualization", "Freq of hair color by sex.html"))
+```
 
+
+## Animated graphics using
+
+### First creating fake stock data
+```{r}
+stock_data <- data.frame(
+  Year = seq(as.Date("1919-01-01"), length.out = 100, by = "year"),
+  A = rep(0, 100),
+  B = rep(0, 100),
+  C = rep(0, 100)) %>%
+  mutate(Year = as.numeric(substr(Year, 1, 4)))
+
+
+# Set initial prices
+stock_data[1, c("A", "B", "C")] <- 100
+
+# Calculate prices for subsequent years
+for (i in 2:100) {
+  stock_data[i, c("A", "B", "C")] <- stock_data[i-1, c("A", "B", "C")] *
+    rnorm(3, mean = 1.07, sd = 0.10)
+}
+
+stock_data_long <- stock_data %>% pivot_longer(
+  cols = A:C, names_to = "Company", values_to = "Price") %>% group_by(Year)
 
 ```
 
+```{r}
+#Making the plot and using + transition_reveal
+ggplot(stock_data_long,
+  aes(Year, Price, group = Company, color = Company)) +
+  geom_path(size = 1.5) +
+  scale_color_manual(values = c("red", "blue", "green")) +
+  labs(x = "Year", y = "Stock Price") +
+  theme(legend.position = "top") +
+  transition_reveal(Year)
+
+
+```
 
